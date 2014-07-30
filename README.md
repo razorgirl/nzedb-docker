@@ -9,8 +9,6 @@ Based on:
 * PHP 5.5.9
 * nginx/1.4.6
 
-apt-get install htop nmon vnstat tcptrack bwm-ng mytop
-
 All extras get installed, including `htop`, `nmon`, `vnstat`, `tcptrack`, `bwm-ng`, `mytop`, `memcached`, `ffmpeg` (the real one, *not* avconv), `mediainfo`, `p7zip`, `unrar` and `lame`.
 
 ## Installation
