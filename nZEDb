@@ -1,0 +1,43 @@
+server {
+        # Change these settings to match your machine
+        listen 80 default_server;
+        server_name localhost;
+
+        # Everything below here doesn't need to be changed
+        access_log /var/log/nginx/access.log;
+        error_log /var/log/nginx/error.log;
+
+        root /var/www/nZEDb/www/;
+        index index.html index.htm index.php;
+
+        location ~* \.(?:ico|css|js|gif|inc|txt|gz|xml|png|jpg|jpeg) {
+                expires max;
+                add_header Pragma public;
+                add_header Cache-Control "public, must-revalidate, proxy-revalidate";
+        }
+
+        location / { try_files $uri $uri/ @rewrites; }
+
+        location ^~ /covers/ {
+            root /var/www/nZEDb/resources;
+        }
+
+        location @rewrites {
+                rewrite ^/([^/\.]+)/([^/]+)/([^/]+)/? /index.php?page=$1&id=$2&subpage=$3 last;
+                rewrite ^/([^/\.]+)/([^/]+)/?$ /index.php?page=$1&id=$2 last;
+                rewrite ^/([^/\.]+)/?$ /index.php?page=$1 last;
+        }
+
+        location /admin { }
+
+        location /install { }
+
+        location ~ \.php$ {
+                include /etc/nginx/fastcgi_params;
+                fastcgi_pass unix:/var/run/php5-fpm.sock;
+
+                # The next two lines should go in your fastcgi_params
+                fastcgi_index index.php;
+                fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
+        }
+}
