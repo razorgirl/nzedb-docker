@@ -25,6 +25,12 @@ To run a new Docker container, enter:
 docker run -itP nzedb/master
 ```
 
+To run as a daemon:
+
+```bash
+docker run -dP nzedb/master
+```
+
 In a new terminal run `docker ps`. The output will be similar to this:
 
 ```
