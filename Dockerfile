@@ -5,6 +5,8 @@ MAINTAINER razorgirl
 
 ENV DEBIAN_FRONTEND noninteractive
 
+RUN echo "Europe/London" >> /etc/timezone
+
 # Make sure system is up-to-date
 RUN sed -i 's/# \(.*multiverse$\)/\1/g' /etc/apt/sources.list && \
   apt-get update && \
