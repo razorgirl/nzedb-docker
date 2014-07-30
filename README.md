@@ -34,6 +34,30 @@ f2653e243825        nzedb/master:latest    /bin/sh -c '/usr/sbi   6 hours ago   
 
 Note the ports. `0.0.0.0:49154->80/tcp` means you can connect to the nZEDb interface via port 49154. Assuming you're running Docker on the same machine you're working on, open your browser with the URL `http://localhost:49154`.
 
+## Configuration Options
+
+Inside the Dockerfile, you should probably change your timezone. To do that, find
+
+```
+RUN echo "Europe/London" >> /etc/timezone
+```
+
+and change "Europe/London" to an appropriate one.
+
+Also, find
+
+```
+RUN sed -ri 's/;(date.timezone =)/\1 Europe\/London/' /etc/php5/cli/php.ini
+```
+
+as well as
+
+```
+RUN sed -ri 's/;(date.timezone =)/\1 Europe\/London/' /etc/php5/fpm/php.ini
+```
+
+and change the regex accordingly. You need to escape the forward slash with `\`.
+
 ## Notes
 
 This image should work on 32- and 64-bit systems with the exception of `ffmpeg`, that's statically linked to 64-bit libraries. If you're working on a 32-bit system, you may want to change the Dockerfile to download and process <http://ffmpeg.gusari.org/static/32bit/ffmpeg.static.32bit.latest.tar.gz> instead.
