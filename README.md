@@ -40,6 +40,8 @@ f2653e243825        nzedb/master:latest    /bin/sh -c '/usr/sbi   6 hours ago   
 
 Note the ports. `0.0.0.0:49154->80/tcp` means you can connect to the nZEDb interface via port 49154. Assuming you're running Docker on the same machine you're working on, open your browser with the URL `http://localhost:49154`.
 
+For more options on running and managing Docker containers, please consult the [Docker User Guide](https://docs.docker.com/userguide/).
+
 ## Configuration Options
 
 Inside the Dockerfile, you should probably change your timezone. To do that, find
