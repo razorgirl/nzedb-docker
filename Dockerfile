@@ -21,6 +21,9 @@ ENV HOME /root
 # Install basic software
 RUN apt-get install -y curl git htop man software-properties-common unzip vim wget tmux ntp ntpdate time
 
+# Install additional software
+RUN apt-get install -y htop nmon vnstat tcptrack bwm-ng mytop
+
 # Install ffmpeg, mediainfo, p7zip-full, unrar and lame
 RUN wget http://ffmpeg.gusari.org/static/64bit/ffmpeg.static.64bit.latest.tar.gz -O /tmp/ffmpeg.static.64bit.latest.tar.gz && \
   tar xfvz /tmp/ffmpeg.static.64bit.latest.tar.gz -C /usr/local/bin && \
