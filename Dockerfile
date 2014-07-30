@@ -111,10 +111,7 @@ VOLUME ["/etc/nginx/sites-enabled", "/var/log", "/var/www/nZEDb"]
 EXPOSE 80
 EXPOSE 443
 
-# Make syslogd error go away
-#RUN sed -ri 's/(\*\.=notice;\*\.=warn\t\|\/dev\/xconsole)/#\1/' /etc/rsyslog.d/50-default.conf
-
 # default command
-ENTRYPOINT /usr/sbin/rsyslogd && /bin/bash
-#ENTRYPOINT supervisord -c /etc/supervisor/supervisord.conf
+# ENTRYPOINT /usr/sbin/rsyslogd && /bin/bash # for debugging
+ENTRYPOINT /usr/sbin/rsyslogd && supervisord -c /etc/supervisor/supervisord.conf
 
