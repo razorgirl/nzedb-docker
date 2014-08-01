@@ -1,6 +1,6 @@
 # nzedb-docker
 
-A Dockerfile to create a full nZEDb install in one go. It's intended to make setting up and testing nZEDb quick and painless.
+A Dockerfile to create a full [nZEDb](https://github.com/nZEDb/nZEDb) install in one go. It's intended to make setting up and testing nZEDb quick and painless.
 
 Based on:
 
@@ -68,4 +68,4 @@ and change the regex accordingly. You need to escape the forward slash with `\`.
 
 ## Notes
 
-This image should work on 32- and 64-bit systems with the exception of `ffmpeg`, that's statically linked to 64-bit libraries. If you're working on a 32-bit system, you may want to change the Dockerfile to download and process <http://ffmpeg.gusari.org/static/32bit/ffmpeg.static.32bit.latest.tar.gz> instead.
+This image should work on 32- and 64-bit systems with the exception of `ffmpeg`, that's statically linked to 64-bit libraries. If you're working on a 32-bit system, you will want to change the Dockerfile to download and process <http://ffmpeg.gusari.org/static/32bit/ffmpeg.static.32bit.latest.tar.gz> instead.
