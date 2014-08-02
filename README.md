@@ -13,6 +13,14 @@ All extras get installed, including `htop`, `nmon`, `vnstat`, `tcptrack`, `bwm-n
 
 ## Installation
 
+First off, edit your `/etc/hosts` file and add the following entry:
+
+```
+127.0.0.1 nzedb.local
+```
+
+I'm not sure how to do that on Windows. The `hosts` file is probably located in `c:\WINDOWS\system32\drivers\etc`.
+
 With a recent version of [Docker](https://www.docker.com) installed, run the following command inside of the repository folder:
 
 ```bash
@@ -22,27 +30,58 @@ docker build --tag nzedb/master .
 To run a new Docker container, enter:
 
 ```bash
-docker run -itP nzedb/master
+docker run -it -p 50000:50000 nzedb/master
 ```
 
 To run as a daemon:
 
 ```bash
-docker run -dP nzedb/master
+docker run -d -p 50000:50000 nzedb/master
 ```
 
 In a new terminal run `docker ps`. The output will be similar to this:
 
 ```
 CONTAINER ID        IMAGE               COMMAND                CREATED             STATUS              PORTS                                           NAMES
-f2653e243825        nzedb/master:latest    /bin/sh -c '/usr/sbi   6 hours ago         Up 6 hours          0.0.0.0:49153->443/tcp, 0.0.0.0:49154->80/tcp   romantic_goldstine
+f2653e243825        nzedb/master:latest    /bin/sh -c '/usr/sbi   6 hours ago         Up 6 hours          0.0.0.0:50000->50000/tcp   romantic_goldstine
 ```
 
-Note the ports. `0.0.0.0:49154->80/tcp` means you can connect to the nZEDb interface via port 49154. Assuming you're running Docker on the same machine you're working on, open your browser with the URL `http://localhost:49154/install`.
+Note the ports. `0.0.0.0:50000->50000/tcp` means that port 50000 from inside the container forwards to the same on your host. Thus, you can connect to the nZEDb interface via port 50000. Assuming you're running Docker on the same machine you're working on, open your browser with the URL `http://nzedb.local:50000/install`.
 
 For more options on running and managing Docker containers, please consult the [Docker User Guide](https://docs.docker.com/userguide/).
 
+## Accessing the container without ssh
+
+The container does not contain a ssh daemon. However, without sacrificing functionality, you can use `nsenter` to open a shell for debugging or general access.
+
+To install the tool, run
+
+```
+docker run -v /usr/local/bin:/target jpetazzo/nsenter
+```
+
+then add this to your bash `.profile`, zsh `.zshrc` or to the user config file of whatever shell you may be using
+
+```
+function docker-enter {
+        NSENTERPID=$(docker inspect --format {{.State.Pid}} $1)
+        nsenter --target $NSENTERPID --mount --uts --ipc --net --pid /bin/bash
+}
+```
+
+Now you can open a bash shell just by entering:
+
+```
+docker-enter f2653e243825
+```
+
+_f2653e243825_ is just an example for your container id. You can find this out with `docker ps` (see above).
+
+If you're using Mac OS X or Windows, you're using `boot2docker`. In this case, setup is slightly more complex. Follow the instructions [here](http://blog.sequenceiq.com/blog/2014/07/05/docker-debug-with-nsenter-on-boot2docker/).
+
 ## Configuration Options
+
+Most importantly, MariaDB contains just a `root` user -- no password.
 
 Inside the Dockerfile, you should probably change your timezone. To do that, find
 

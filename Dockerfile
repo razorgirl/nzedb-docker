@@ -110,13 +110,10 @@ RUN mkdir /var/www && \
   chmod -R 777 /var/www/nZEDb/resources -R
 
 # Define mountable directories
-VOLUME ["/etc/nginx/sites-enabled", "/var/log", "/var/www/nZEDb"]
+VOLUME ["/etc/nginx/sites-enabled", "/var/log", "/var/www/nZEDb", "/var/lib/mysql"]
 
 # Expose ports
-EXPOSE 80
-EXPOSE 443
+EXPOSE 50000
 
 # default command
-# ENTRYPOINT /usr/sbin/rsyslogd && /bin/bash # for debugging
 ENTRYPOINT /usr/sbin/rsyslogd && supervisord -c /etc/supervisor/supervisord.conf
-
