@@ -10,6 +10,7 @@ FROM phusion/baseimage:0.9.13
 MAINTAINER razorgirl <https://github.com/razorgirl>
 
 # Set correct environment variables.
+ENV TZ Europe/London
 ENV HOME /root
 ENV LANG en_US.UTF-8
 ENV LANGUAGE en_US.UTF-8
