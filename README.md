@@ -62,7 +62,7 @@ ssh -i id_rsa root@172.17.2.168
 
 ## Configuration Options
 
-### Having nZEDb folder outside of container, for.. you know.. development
+### Have nZEDb folder outside of container, for.. you know.. development
 
 ```bash
 docker run -d -p 8800:8800 --name nZEDb -v <LOCAL_NZEDB_FOLDER>:/var/www/nZEDb nzedb/master
