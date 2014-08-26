@@ -1,7 +1,7 @@
 server {
         # Change these settings to match your machine
-        listen 50000 default_server;
-        server_name nzedb.local;
+        listen 8800 default_server;
+        server_name localhost;
 
         # Everything below here doesn't need to be changed
         access_log /var/log/nginx/access.log;

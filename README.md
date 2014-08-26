@@ -5,7 +5,7 @@ A Dockerfile to create a full [nZEDb](https://github.com/nZEDb/nZEDb) install in
 Based on:
 
 * Ubuntu Server 14.04 LTS
-* MariaDB 10.1
+* MariaDB 10.0
 * PHP 5.5.9
 * nginx/1.4.6
 
@@ -13,85 +13,76 @@ All extras get installed, including `htop`, `nmon`, `vnstat`, `tcptrack`, `bwm-n
 
 ## Installation
 
-First off, edit your `/etc/hosts` file and add the following entry:
+You need to have [Docker](http://www.docker.com/) installed. If you don't or are not familiar with Docker, please take a look at their web site. They do a really good job of getting you up and running.
 
-```
-127.0.0.1 nzedb.local
-```
-
-I'm not sure how to do that on Windows. The `hosts` file is probably located in `c:\WINDOWS\system32\drivers\etc`.
-
-With a recent version of [Docker](https://www.docker.com) installed, run the following command inside of the repository folder:
+### Build
 
 ```bash
 docker build --tag nzedb/master .
 ```
 
-To run a new Docker container, enter:
+### Run
 
 ```bash
-docker run -it -p 50000:50000 nzedb/master
+docker run -d -p 8800:8800 --name nZEDb nzedb/master
 ```
 
-To run as a daemon:
-
-```bash
-docker run -d -p 50000:50000 nzedb/master
-```
+### Info
 
 In a new terminal run `docker ps`. The output will be similar to this:
 
 ```
 CONTAINER ID        IMAGE               COMMAND                CREATED             STATUS              PORTS                                           NAMES
-f2653e243825        nzedb/master:latest    /bin/sh -c '/usr/sbi   6 hours ago         Up 6 hours          0.0.0.0:50000->50000/tcp   romantic_goldstine
+f2653e243825        nzedb/master:latest    /bin/sh -c '/usr/sbi   6 hours ago         Up 6 hours          0.0.0.0:8800->8800/tcp   romantic_goldstine  nZEDb
 ```
 
-Note the ports. `0.0.0.0:50000->50000/tcp` means that port 50000 from inside the container forwards to the same on your host. Thus, you can connect to the nZEDb interface via port 50000. Assuming you're running Docker on the same machine you're working on, open your browser with the URL `http://nzedb.local:50000/install`.
+Note the ports. `0.0.0.0:8800->8800/tcp` means that port 8800 from inside the container forwards to the same on your host. Thus, you can connect to the nZEDb interface via port 8800. Assuming you're running Docker on the same machine you're working on, open your browser with the URL `http://<HOST_IP>:8800/install`.
 
 For more options on running and managing Docker containers, please consult the [Docker User Guide](https://docs.docker.com/userguide/).
 
-## Accessing the container without ssh
+## SSH Access
 
-The container does not contain a ssh daemon. However, without sacrificing functionality, you can use `nsenter` to open a shell for debugging or general access.
+In the former Dockerfile I tried to get things running without `ssh`, which has provento be very difficult in the case of nZEDb. I still use Docker to separate processes and services but nZEDb is a complex beast with some rather, umhhh… *interesting* code. To make things easier, I configured things to run off the [phusion-docker base image](http://phusion.github.io/baseimage-docker/). Don't let their bold claim about doing things their way to be the right way get to you. It's simply one way to do it. In this case the most convenient alternative because the resulting container largely behaves like a virtual server.
 
-To install the tool, run
+There is a pre-generated SSH key set present. Of course, these keys are insecure and need to be replaced in production use. However, for development and testing, these are sufficient.
 
-```
-docker run -v /usr/local/bin:/target jpetazzo/nsenter
-```
+### Login
 
-then add this to your bash `.profile`, zsh `.zshrc` or to the user config file of whatever shell you may be using
+Use `docker inspect $(docker ps -aq nZEDb) | grep IPAddress` to get the container's IP address. The output:
 
 ```
-function docker-enter {
-        NSENTERPID=$(docker inspect --format {{.State.Pid}} $1)
-        nsenter --target $NSENTERPID --mount --uts --ipc --net --pid /bin/bash
-}
+        "IPAddress": "172.17.2.168",
 ```
 
-Now you can open a bash shell just by entering:
+Then log in:
 
+```bash
+ssh -i id_rsa root@172.17.2.168
 ```
-docker-enter f2653e243825
-```
-
-_f2653e243825_ is just an example for your container id. You can find this out with `docker ps` (see above).
-
-If you're using Mac OS X or Windows, you're using `boot2docker`. In this case, setup is slightly more complex. Follow the instructions [here](http://blog.sequenceiq.com/blog/2014/07/05/docker-debug-with-nsenter-on-boot2docker/).
 
 ## Configuration Options
 
+### Having nZEDb folder outside of container, for.. you know.. development
+
+```bash
+docker run -d -p 8800:8800 --name nZEDb -v <LOCAL_NZEDB_FOLDER>:/var/www/nZEDb nzedb/master
+```
+
+This will map the local folder to respective folder inside of the image. Feel free to experiment!
+
+### MariaDB
+
 Most importantly, MariaDB contains just a `root` user -- no password.
+
+### Timezone
 
 Inside the Dockerfile, you should probably change your timezone. To do that, find
 
 ```
-RUN echo "Europe/London" >> /etc/timezone
+ENV TZ Europe/London
 ```
 
-and change "Europe/London" to an appropriate one.
-
-Also, find
+and replace. Also find
 
 ```
 RUN sed -ri 's/;(date.timezone =)/\1 Europe\/London/' /etc/php5/cli/php.ini
@@ -107,4 +98,4 @@ and change the regex accordingly. You need to escape the forward slash with `\`.
 
 ## Notes
 
-This image should work on 32- and 64-bit systems with the exception of `ffmpeg`, that's statically linked to 64-bit libraries. If you're working on a 32-bit system, you will want to change the Dockerfile to download and process <http://ffmpeg.gusari.org/static/32bit/ffmpeg.static.32bit.latest.tar.gz> instead.
+As Docker is 64-bit only, you need to have current hardware.
