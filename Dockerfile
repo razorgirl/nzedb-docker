@@ -102,8 +102,8 @@ RUN \
   mkdir /var/www && \
   cd /var/www && \
   git clone https://github.com/nZEDb/nZEDb.git && \
-  chown www-data:www-data nZEDb/www -R
   chmod 777 /var/www/nZEDb/libs/smarty/templates_c && \
+  chown www-data:www-data nZEDb/www -R
 
 # Add services.
 RUN mkdir /etc/service/nginx
