@@ -1,0 +1,22 @@
+version: "2"
+
+services:
+  nzedb:
+    build: nzedb/.
+  php:
+    build: php/.
+    volumes_from:
+      - nzedb
+  db:
+    image: mariadb
+    environment:
+      - "MYSQL_DATABASE=nzedb"
+      - "MYSQL_USER=nzedb"
+      - "MYSQL_PASSWORD=nzedb"
+      - "MYSQL_ROOT_PASSWORD=nzedb"
+  web:
+    build: nginx/.
+    ports:
+      - 8800:8800
+    volumes_from:
+      - nzedb
