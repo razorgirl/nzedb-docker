@@ -35,7 +35,7 @@ RUN apk add htop bwm-ng
 RUN \
   cd /tmp && \
   wget http://humdi.net/vnstat/vnstat-1.16.tar.gz && \
-  tar xf vnstat-1.16.tar.gz && \
+  tar zxf vnstat-1.16.tar.gz && \
   cd vnstat-1.16 && \
   ./configure && \
   make && \
