@@ -18,8 +18,13 @@ RUN \
   apk update && \
   apk upgrade
 
+RUN apk add bash curl unzip vim wget build-base
+# Install ffmpeg, p7zip, unrar and lame.
+RUN apk add ffmpeg unrar lame p7zip
+
 # Install PHP.
 RUN apk add git php5 php5-pear php5-gd php5-mysql php5-curl php5-json php5-phar php5-imagick php5-pdo_mysql php5-mcrypt php5-common php5-xml php5-openssl php5-zlib php5-ctype php5-exif php5-iconv php5-sockets php5-fpm memcached php5-memcache
+
 # RUN sed -ri 's/(max_execution_time =) ([0-9]+)/\1 120/' /etc/php5/php.ini
 # RUN sed -ri 's/(memory_limit =) ([0-9]+)/\1 -1/' /etc/php5/php.ini
 # RUN sed -ri 's/;(date.timezone =)/\1 Europe\/London/' /etc/php5/php.ini
@@ -43,9 +48,18 @@ RUN \
 #   apk del git boost-dev build-base && \
 #   apk add boost
 
+
+# Install MediaInfo from source, since not available as Alpine Linux package.
+RUN \
+  cd /tmp && \
+  wget https://mediaarea.net/download/binary/mediainfo/0.7.91/MediaInfo_CLI_0.7.91_GNU_FromSource.tar.xz && \
+  tar Jxf MediaInfo_CLI_0.7.91_GNU_FromSource.tar.xz && \
+  cd MediaInfo_CLI_GNU_FromSource && \
+  ./CLI_Compile.sh && \
+  cd MediaInfo/Project/GNU/CLI && make install
+
 # Install yydecode
 RUN \
-  apk add build-base && \
   cd /tmp && \
   mkdir -p yydecode && \
   cd yydecode && \
@@ -54,8 +68,7 @@ RUN \
   cd yydecode-0.2.10 && \
   ./configure && \
   make && \
-  make install && \
-  apk del build-base
+  make install
 
 # Expose ports
 EXPOSE 9000
