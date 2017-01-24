@@ -35,7 +35,7 @@ RUN apk add htop bwm-ng
 RUN \
   cd /tmp && \
   wget http://humdi.net/vnstat/vnstat-1.16.tar.gz && \
-  tar xf vnstat-1.16.tar.gz && \
+  tar zxf vnstat-1.16.tar.gz && \
   cd vnstat-1.16 && \
   ./configure && \
   make && \
@@ -46,7 +46,7 @@ RUN \
   apk add perl perl-dbi perl-dbd-mysql perl-term-readkey && \
   cd /tmp && \
   wget http://jeremy.zawodny.com/mysql/mytop/mytop-1.6.tar.gz && \
-  tar xf mytop-1.6.tar.gz && \
+  tar zxf mytop-1.6.tar.gz && \
   cd mytop-1.6 && \
   perl Makefile.PL && \
   make && \
@@ -56,7 +56,7 @@ RUN \
 RUN \
   cd /tmp && \
   wget https://mediaarea.net/download/binary/mediainfo/0.7.91/MediaInfo_CLI_0.7.91_GNU_FromSource.tar.xz && \
-  tar xf MediaInfo_CLI_0.7.91_GNU_FromSource.tar.xz && \
+  tar Jxf MediaInfo_CLI_0.7.91_GNU_FromSource.tar.xz && \
   cd MediaInfo_CLI_GNU_FromSource && \
   ./CLI_Compile.sh && \
   cd MediaInfo/Project/GNU/CLI && make install
