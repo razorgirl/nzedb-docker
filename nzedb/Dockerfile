@@ -3,7 +3,7 @@
 # Create a quick and clean dev environment
 #
 
-FROM alpine:3.3
+FROM alpine:3.4
 MAINTAINER razorgirl <https://github.com/razorgirl>
 
 # Set correct environment variables.
@@ -67,6 +67,8 @@ RUN apk add ffmpeg unrar lame p7zip
 # Install Python modules.
 RUN \
   apk add python python3 py-pip && \
+  python3 -m ensurepip && \ 
+  rm -r /usr/lib/python*/ensurepip && \
   pip install --upgrade pip && \
   pip install cymysql && \
   pip install pynntp && \
