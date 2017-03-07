@@ -3,7 +3,7 @@
 # Create a quick and clean dev environment
 #
 
-FROM alpine:3.3
+FROM alpine:3.4
 MAINTAINER razorgirl <https://github.com/razorgirl>
 
 # Set correct environment variables.
