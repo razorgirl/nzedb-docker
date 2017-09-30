@@ -1,3 +1,5 @@
+**This project is no longer maintained. Feel free to fork and create your own version.**
+
 # nzedb-docker
 
 A Dockerfile to create a full [nZEDb](https://github.com/nZEDb/nZEDb) install in one go. It's intended to make setting up and testing nZEDb quick and painless.
